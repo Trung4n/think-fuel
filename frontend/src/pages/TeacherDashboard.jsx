@@ -5,13 +5,14 @@ import FuelBar from '../components/FuelBar'
 
 function RiskBadge({ risk }) {
   const map = {
-    high: 'text-rose-400 border-rose-800 bg-rose-950',
-    medium: 'text-amber-400 border-amber-800 bg-amber-950',
-    low: 'text-green-400 border-green-800 bg-green-950',
+    high: { color: '#E11D48', bg: '#FFF1F2', border: '#FECDD3' },
+    medium: { color: '#D97706', bg: '#FFFBEB', border: '#FDE68A' },
+    low: { color: '#059669', bg: '#ECFDF5', border: '#A7F3D0' },
   }
-  const cls = map[risk?.toLowerCase()] || 'text-gray-400 border-gray-700'
+  const s = map[risk?.toLowerCase()] || { color: '#6B7280', bg: '#F9FAFB', border: '#E5E7EB' }
   return (
-    <span className={`text-xs border px-2 py-0.5 rounded capitalize font-mono ${cls}`}>
+    <span className="text-xs font-medium px-2.5 py-0.5 rounded-full capitalize"
+      style={{ color: s.color, background: s.bg, border: `1px solid ${s.border}` }}>
       {risk || 'N/A'}
     </span>
   )
@@ -19,12 +20,12 @@ function RiskBadge({ risk }) {
 
 function ScoreCell({ score, invert = false }) {
   const n = Number(score)
-  let color = 'text-gray-300'
+  let color = '#374151'
   if (!isNaN(n)) {
-    if (invert) color = n > 60 ? 'text-rose-400' : n > 30 ? 'text-amber-400' : 'text-green-400'
-    else color = n >= 60 ? 'text-green-400' : n >= 30 ? 'text-amber-400' : 'text-rose-400'
+    if (invert) color = n > 60 ? '#E11D48' : n > 30 ? '#D97706' : '#059669'
+    else color = n >= 60 ? '#059669' : n >= 30 ? '#D97706' : '#E11D48'
   }
-  return <span className={`font-mono text-sm ${color}`}>{score ?? '—'}</span>
+  return <span className="font-mono text-sm font-semibold" style={{ color }}>{score ?? '—'}</span>
 }
 
 export default function TeacherDashboard() {
@@ -57,17 +58,19 @@ export default function TeacherDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <span className="text-gray-400 text-sm">Loading...</span>
+        <span className="text-sm text-gray-400">Loading...</span>
       </div>
     )
   }
 
+  const unreadCount = alerts.filter(a => !a.isRead).length
+
   return (
-    <div className="p-6 max-w-6xl">
+    <div className="p-6 max-w-6xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-white">Teacher Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Teacher Analytics</h1>
         {dash?.className && (
-          <p className="text-sm text-gray-400 mt-1">{dash.className}</p>
+          <p className="text-sm text-gray-500 mt-1">{dash.className} — Progress & Early Alerts</p>
         )}
       </div>
 
@@ -75,14 +78,14 @@ export default function TeacherDashboard() {
       {dash && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
-            { label: 'Total Students', value: dash.totalStudents },
-            { label: 'Avg Dependency Score', value: dash.avgDependencyScore },
-            { label: 'At-Risk Students', value: dash.atRiskStudents },
-            { label: 'Class', value: dash.className || '—' },
-          ].map(({ label, value }) => (
-            <div key={label} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-              <div className="text-2xl font-bold text-white">{value ?? '—'}</div>
-              <div className="text-xs text-gray-400 mt-1">{label}</div>
+            { label: 'Total Students', value: dash.totalStudents, color: '#3B82F6' },
+            { label: 'Avg Dependency', value: dash.avgDependencyScore, color: '#E11D48' },
+            { label: 'At-Risk Students', value: dash.atRiskStudents, color: '#F59E0B' },
+            { label: 'Class', value: dash.className || '—', color: '#14B8A6' },
+          ].map(({ label, value, color }) => (
+            <div key={label} className="card p-4">
+              <div className="text-2xl font-bold mb-1" style={{ color }}>{value ?? '—'}</div>
+              <div className="text-xs font-medium text-gray-500">{label}</div>
             </div>
           ))}
         </div>
@@ -90,44 +93,39 @@ export default function TeacherDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Students table */}
-        <div className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-800">
-            <h2 className="text-sm font-medium text-white">Students</h2>
+        <div className="lg:col-span-2 card overflow-hidden">
+          <div className="px-5 py-3.5 border-b border-gray-100">
+            <h2 className="text-sm font-semibold text-gray-900">Students</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-800">
-                  <th className="text-left px-4 py-2.5 text-xs text-gray-500 font-medium">Name</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-gray-500 font-medium">Brain Fuel</th>
-                  <th className="text-center px-4 py-2.5 text-xs text-gray-500 font-medium">Dep.</th>
-                  <th className="text-center px-4 py-2.5 text-xs text-gray-500 font-medium">Ind.</th>
-                  <th className="text-center px-4 py-2.5 text-xs text-gray-500 font-medium">Risk</th>
+                <tr className="border-b border-gray-100 bg-gray-50">
+                  {['Name', 'Brain Fuel', 'Dep.', 'Ind.', 'Risk'].map((h, i) => (
+                    <th key={h}
+                      className={`${i > 1 ? 'text-center' : 'text-left'} px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide`}>
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {students.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-6 text-center text-gray-600 text-xs">
+                    <td colSpan={5} className="px-4 py-8 text-center text-xs text-gray-400">
                       No students found.
                     </td>
                   </tr>
                 )}
                 {students.map(s => (
-                  <tr key={s.id} className="border-b border-gray-800 last:border-0">
-                    <td className="px-4 py-3 text-gray-200">{s.name}</td>
-                    <td className="px-4 py-3 w-32">
+                  <tr key={s.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 font-medium text-gray-800">{s.name}</td>
+                    <td className="px-4 py-3 w-36">
                       <FuelBar fuel={s.brainFuel} maxFuel={1000} showLabel={false} />
                     </td>
-                    <td className="px-4 py-3 text-center">
-                      <ScoreCell score={s.dependencyScore} invert={true} />
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <ScoreCell score={s.independenceScore} />
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <RiskBadge risk={s.risk} />
-                    </td>
+                    <td className="px-4 py-3 text-center"><ScoreCell score={s.dependencyScore} invert={true} /></td>
+                    <td className="px-4 py-3 text-center"><ScoreCell score={s.independenceScore} /></td>
+                    <td className="px-4 py-3 text-center"><RiskBadge risk={s.risk} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -136,36 +134,32 @@ export default function TeacherDashboard() {
         </div>
 
         {/* Alerts */}
-        <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-800">
-            <h2 className="text-sm font-medium text-white">
-              Alerts
-              {alerts.filter(a => !a.isRead).length > 0 && (
-                <span className="ml-2 text-xs bg-rose-900 text-rose-300 px-1.5 py-0.5 rounded">
-                  {alerts.filter(a => !a.isRead).length}
-                </span>
-              )}
-            </h2>
+        <div className="card overflow-hidden">
+          <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-gray-900">Alerts</h2>
+            {unreadCount > 0 && (
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                style={{ background: '#FFF1F2', color: '#E11D48', border: '1px solid #FECDD3' }}>
+                {unreadCount}
+              </span>
+            )}
           </div>
           <div className="overflow-auto max-h-96">
             {alerts.length === 0 && (
-              <p className="text-center text-gray-600 text-xs p-6">No alerts.</p>
+              <p className="text-center text-gray-400 text-xs p-6">No alerts.</p>
             )}
             {alerts.map((alert, i) => (
-              <div
-                key={i}
-                className={`px-4 py-3 border-b border-gray-800 last:border-0 ${
-                  !alert.isRead ? 'bg-gray-800/40' : ''
-                }`}
-              >
+              <div key={i}
+                className="px-5 py-3.5 border-b border-gray-50 last:border-0 transition-colors"
+                style={{ background: !alert.isRead ? '#FFFBEB' : 'transparent' }}>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-amber-400">{alert.type}</span>
+                  <span className="text-xs font-semibold" style={{ color: '#D97706' }}>{alert.type}</span>
                   {!alert.isRead && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#E11D48' }} />
                   )}
                 </div>
-                <p className="text-xs text-gray-300 leading-relaxed">{alert.message}</p>
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-xs text-gray-600 leading-relaxed">{alert.message}</p>
+                <p className="text-xs text-gray-400 mt-1">
                   {alert.createdAt ? new Date(alert.createdAt).toLocaleString() : ''}
                 </p>
               </div>

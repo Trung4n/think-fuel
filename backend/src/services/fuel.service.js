@@ -1,6 +1,16 @@
 import StudentStat from "../models/student_stats.model.js";
 import FuelTransaction from "../models/fuel_transactions.model.js";
 
+export const FUEL_COSTS = {
+  socratic_probe: 5,
+  socratic_abuse: 5,
+  hint: 15,
+  guided_steps: 30,
+  full_explain: 50,
+  direct_answer: 80,
+  locked: 0,
+};
+
 export function getFuelMode(fuel) {
   if (fuel > 700) return "full_help";
   if (fuel >= 300) return "guided";
@@ -8,18 +18,40 @@ export function getFuelMode(fuel) {
   return "locked";
 }
 
-export async function deductFuel(userId, tokens) {
-  const cost = Math.min(80, Math.max(20, Math.ceil(tokens / 10)));
+export async function deductFuelByType(userId, assistanceType, streakMultiplier = 1) {
+  const baseCost = FUEL_COSTS[assistanceType] ?? 20;
+  const cost = Math.round(baseCost * streakMultiplier);
+
   const current = await StudentStat.findOne({ userId }, "brainFuel maxFuel dependencyScore");
   const newFuel = Math.max(0, (current?.brainFuel ?? 0) - cost);
-  const newDep = Math.min(100, (current?.dependencyScore ?? 0) + 2);
+
+  const depIncrease = assistanceType === "direct_answer" ? 5
+    : assistanceType === "full_explain" ? 3
+    : assistanceType === "guided_steps" ? 1
+    : 0;
+  const newDep = Math.min(100, (current?.dependencyScore ?? 0) + depIncrease);
 
   await StudentStat.findOneAndUpdate(
     { userId },
-    { $set: { brainFuel: newFuel, lastActiveAt: new Date(), dependencyScore: newDep, independenceScore: Math.max(0, 100 - newDep) } }
+    {
+      $set: {
+        brainFuel: newFuel,
+        lastActiveAt: new Date(),
+        dependencyScore: newDep,
+        independenceScore: Math.max(0, 100 - newDep),
+      },
+    }
   );
 
-  await FuelTransaction.create({ userId, type: "debit", amount: cost, reason: "chat", balanceAfter: newFuel });
+  if (cost > 0) {
+    await FuelTransaction.create({
+      userId,
+      type: "debit",
+      amount: cost,
+      reason: assistanceType,
+      balanceAfter: newFuel,
+    });
+  }
 
   return { newFuel, cost };
 }
@@ -40,10 +72,22 @@ export async function rewardFuel(userId, action) {
 
   await StudentStat.findOneAndUpdate(
     { userId },
-    { $set: { brainFuel: newFuel, dependencyScore: newDep, independenceScore: Math.min(100, 100 - newDep) } }
+    {
+      $set: {
+        brainFuel: newFuel,
+        dependencyScore: newDep,
+        independenceScore: Math.min(100, 100 - newDep),
+      },
+    }
   );
 
-  await FuelTransaction.create({ userId, type: "credit", amount: added, reason: action, balanceAfter: newFuel });
+  await FuelTransaction.create({
+    userId,
+    type: "credit",
+    amount: added,
+    reason: action,
+    balanceAfter: newFuel,
+  });
 
   return { newFuel, added };
 }

@@ -4,16 +4,24 @@ import QuizAttempt from "../models/quiz_attempts.model.js";
 import { rewardFuel } from "../services/fuel.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+async function pickQuestion(filter) {
+  const count = await QuizQuestion.countDocuments(filter);
+  if (count === 0) return null;
+  return QuizQuestion.findOne(filter).skip(Math.floor(Math.random() * count));
+}
+
 export const getNextQuestion = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const { userId, subjectId } = req.params;
+
   const stat = await StudentStat.findOne({ userId });
   const streak = stat?.correctStreak ?? 0;
   const difficulty = streak >= 5 ? "hard" : streak >= 2 ? "medium" : "easy";
 
-  const count = await QuizQuestion.countDocuments({ difficulty });
-  const skip = Math.floor(Math.random() * count);
-  const question = await QuizQuestion.findOne({ difficulty }).skip(skip);
+  const baseFilter = subjectId ? { subjectId } : {};
 
+  // Try preferred difficulty first, fall back to any difficulty in the subject
+  let question = await pickQuestion({ ...baseFilter, difficulty });
+  if (!question) question = await pickQuestion(baseFilter);
   if (!question) return res.json({ success: true, data: null });
 
   const { correctAnswer, questionText, _id, ...rest } = question.toObject();
@@ -49,10 +57,13 @@ export const submitAnswer = asyncHandler(async (req, res) => {
     rewardFuel: rewardResult.added,
   });
 
-  res.json({ success: true, data: {
-    correct: isCorrect,
-    explanation: question.explanation,
-    rewardFuel: rewardResult.added,
-    newFuel: rewardResult.newFuel,
-  }});
+  res.json({
+    success: true,
+    data: {
+      correct: isCorrect,
+      explanation: question.explanation,
+      rewardFuel: rewardResult.added,
+      newFuel: rewardResult.newFuel,
+    },
+  });
 });

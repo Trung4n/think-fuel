@@ -16,6 +16,7 @@ const studentStatSchema = new mongoose.Schema(
     chatCountToday: { type: Number, default: 0 },
     quizCompleted: { type: Number, default: 0 },
     correctStreak: { type: Number, default: 0 },
+    answerSeekStreak: { type: Number, default: 0 },
 
     lastActiveAt: { type: Date, index: true },
   },

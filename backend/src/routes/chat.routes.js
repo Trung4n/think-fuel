@@ -4,5 +4,6 @@ import { authenticate } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 router.post("/message", authenticate, sendMessage);
+router.get("/history/:userId/:subjectId", authenticate, getHistory);
 router.get("/history/:userId", authenticate, getHistory);
 export default router;

@@ -6,7 +6,8 @@
       "Bash(npm run *)",
       "Bash(npx vite *)",
       "Bash(timeout 5 node src/server.js)",
-      "Bash(node --input-type=module --eval ' *)"
+      "Bash(node --input-type=module --eval ' *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(JSON.stringify\\({deps:p.dependencies,dev:p.devDependencies},null,2\\)\\)\")"
     ]
   }
 }
