@@ -57,19 +57,19 @@ export default function StudentDashboard() {
   ] : []
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
           Welcome back, {data?.name || user.name}
-          <Icon icon={faHand} style={{ color: '#F59E0B', fontSize: '1.25rem' }} />
+          <Icon icon={faHand} style={{ color: '#F59E0B', fontSize: '1.5rem' }} />
         </h1>
-        <p className="text-sm text-gray-500 mt-1">Here's your learning overview for today</p>
+        <p className="text-base text-gray-500 mt-1.5">Here's your learning overview for today</p>
       </div>
 
       {/* Fuel card */}
       {data && (
-        <div className="card p-5 mb-6">
+        <div className="card p-6 mb-6">
           <div className="flex justify-between items-center mb-3">
             <div>
               <span className="text-sm font-semibold text-gray-900">Brain Fuel</span>
@@ -111,11 +111,11 @@ export default function StudentDashboard() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         {stats.map(({ label, value, note, color }) => (
-          <div key={label} className="card p-4">
-            <div className="text-2xl font-bold mb-1" style={{ color }}>{value}</div>
-            <div className="text-xs font-medium text-gray-700">{label}</div>
+          <div key={label} className="card p-5">
+            <div className="text-3xl font-bold mb-1.5" style={{ color }}>{value}</div>
+            <div className="text-sm font-medium text-gray-700">{label}</div>
             <div className="text-xs text-gray-400 mt-0.5">{note}</div>
           </div>
         ))}
@@ -123,11 +123,11 @@ export default function StudentDashboard() {
 
       {/* Leaderboard */}
       {leaderboard.length > 0 && (
-        <div className="card p-5 mb-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="card p-6 mb-6">
+          <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">Leaderboard</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Learning Mastery Score — quiz accuracy, independence &amp; streak</p>
+              <h2 className="text-base font-semibold text-gray-900">Leaderboard</h2>
+              <p className="text-sm text-gray-400 mt-0.5">Learning Mastery Score — quiz accuracy, independence &amp; streak</p>
             </div>
             {myEntry && (
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0"
@@ -209,14 +209,14 @@ export default function StudentDashboard() {
       {/* Subject cards */}
       {subjects.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Study a Subject</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <h2 className="text-base font-semibold text-gray-700 mb-4">Study a Subject</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {subjects.map(s => (
-              <div key={s._id} className="card p-5" style={{ border: '1px solid #E2E8F0' }}>
-                <div className="text-2xl mb-2">
+              <div key={s._id} className="card p-6" style={{ border: '1px solid #E2E8F0' }}>
+                <div className="text-3xl mb-3">
                   {s.icon || <Icon icon={faBook} style={{ color: '#14B8A6' }} />}
                 </div>
-                <div className="text-sm font-semibold text-gray-900 mb-3">{s.name}</div>
+                <div className="text-base font-semibold text-gray-900 mb-4">{s.name}</div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => navigate(`/student/chat/${s._id}`)}

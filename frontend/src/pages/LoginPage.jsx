@@ -83,12 +83,12 @@ export default function LoginPage() {
           <div className="relative z-10 text-center">
             <div className="mb-6 select-none flex items-center justify-center"
               style={{ filter: 'drop-shadow(0 8px 24px rgba(20,184,166,0.25))' }}>
-              <Icon icon={faRobot} style={{ fontSize: '7rem', color: '#14B8A6' }} />
+              <Icon icon={faRobot} style={{ fontSize: '9rem', color: '#14B8A6' }} />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">
               AI rewards thinking,<br />not laziness
             </h2>
-            <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
+            <p className="text-base text-gray-500 max-w-xs leading-relaxed">
               Your AI tutor adapts to how much you engage. Brain Fuel is earned through effort — not shortcuts.
             </p>
 
@@ -110,8 +110,8 @@ export default function LoginPage() {
         </div>
 
         {/* Right — form */}
-        <div className="flex flex-col justify-center w-full md:w-auto px-8 md:px-16 py-12 md:min-w-[440px]">
-          <div className="w-full max-w-sm">
+        <div className="flex flex-col justify-center w-full md:w-auto px-8 md:px-16 py-12 md:min-w-[520px]">
+          <div className="w-full max-w-md">
             {/* Mobile logo */}
             <div className="md:hidden flex items-center gap-2 mb-8">
               <Icon icon={faBrain} style={{ color: '#14B8A6', fontSize: '1.25rem' }} />
@@ -119,8 +119,8 @@ export default function LoginPage() {
             </div>
 
             {/* Form card */}
-            <div className="card p-8">
-              <h1 className="text-xl font-bold text-gray-900 mb-6">Sign in</h1>
+            <div className="card p-10">
+              <h1 className="text-2xl font-bold text-gray-900 mb-7">Sign in</h1>
 
               {/* Role tabs */}
               <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
@@ -142,28 +142,28 @@ export default function LoginPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Email</label>
+                  <label className="block text-sm font-medium text-gray-600 mb-1.5">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="Email"
                     required
-                    className="w-full px-3.5 py-2.5 text-sm text-gray-900 bg-white rounded-xl transition-all focus:outline-none"
+                    className="w-full px-4 py-3 text-base text-gray-900 bg-white rounded-xl transition-all focus:outline-none"
                     style={{ border: '1.5px solid #E2E8F0' }}
                     onFocus={e => { e.target.style.borderColor = '#14B8A6'; e.target.style.boxShadow = '0 0 0 3px rgba(20,184,166,0.1)' }}
                     onBlur={e => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Password</label>
+                  <label className="block text-sm font-medium text-gray-600 mb-1.5">Password</label>
                   <input
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="Password"
                     required
-                    className="w-full px-3.5 py-2.5 text-sm text-gray-900 bg-white rounded-xl transition-all focus:outline-none"
+                    className="w-full px-4 py-3 text-base text-gray-900 bg-white rounded-xl transition-all focus:outline-none"
                     style={{ border: '1.5px solid #E2E8F0' }}
                     onFocus={e => { e.target.style.borderColor = '#14B8A6'; e.target.style.boxShadow = '0 0 0 3px rgba(20,184,166,0.1)' }}
                     onBlur={e => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none' }}

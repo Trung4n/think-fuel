@@ -118,12 +118,12 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-full chat-bg">
       {/* Header */}
-      <div className="flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200"
+      <div className="flex-shrink-0 px-6 py-4 bg-white border-b border-gray-200"
         style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2.5">
-            {subject?.icon && <span className="text-xl">{subject.icon}</span>}
-            <span className="text-sm font-semibold text-gray-900">
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-3">
+            {subject?.icon && <span className="text-2xl">{subject.icon}</span>}
+            <span className="text-base font-semibold text-gray-900">
               {subject?.name || 'Loading...'}
             </span>
             <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">AI Tutor</span>
@@ -143,7 +143,7 @@ export default function ChatPage() {
       </div>
 
       {/* Fuel cost legend */}
-      <div className="flex-shrink-0 px-4 py-1.5 bg-white/70 border-b border-gray-100 flex gap-4 overflow-x-auto">
+      <div className="flex-shrink-0 px-6 py-2 bg-white/70 border-b border-gray-100 flex gap-6 overflow-x-auto">
         {[
           { level: 'socratic_probe', text: '-5' },
           { level: 'hint', text: '-15' },
@@ -160,17 +160,17 @@ export default function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-auto px-4 py-4 space-y-4">
+      <div className="flex-1 overflow-auto px-8 py-6 space-y-5">
         {historyLoading && (
           <div className="text-center text-gray-400 text-sm py-8">Loading history...</div>
         )}
         {!historyLoading && messages.length === 0 && (
-          <div className="text-center py-16">
-            <div className="mb-3">
-              <Icon icon={faRobot} style={{ fontSize: '2.5rem', color: '#14B8A6' }} />
+          <div className="text-center py-20">
+            <div className="mb-4">
+              <Icon icon={faRobot} style={{ fontSize: '3.5rem', color: '#14B8A6' }} />
             </div>
-            <p className="text-gray-500 text-sm font-medium mb-1">No messages yet</p>
-            <p className="text-gray-400 text-xs">
+            <p className="text-gray-500 text-base font-medium mb-1.5">No messages yet</p>
+            <p className="text-gray-400 text-sm">
               Show your work for better help. Direct answers cost more fuel.
             </p>
           </div>
@@ -179,13 +179,13 @@ export default function ChatPage() {
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'user' ? (
               <div
-                className="max-w-lg rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm text-white"
+                className="max-w-2xl rounded-2xl rounded-tr-sm px-5 py-3 text-base text-white"
                 style={{ background: 'linear-gradient(135deg, #14B8A6, #0D9488)' }}
               >
                 {msg.content}
               </div>
             ) : (
-              <div className="max-w-2xl w-full">
+              <div className="max-w-3xl w-full">
                 {!msg.isError && (msg.assistanceLevel || msg.mode) && (
                   <div className="mb-1.5 ml-1">
                     <AssistanceTag
@@ -195,7 +195,7 @@ export default function ChatPage() {
                   </div>
                 )}
                 <div
-                  className={`rounded-2xl rounded-tl-sm px-4 py-3 ${
+                  className={`rounded-2xl rounded-tl-sm px-5 py-3.5 ${
                     msg.isError ? 'bg-red-50 border border-red-200' : 'bg-white border border-gray-200'
                   }`}
                   style={!msg.isError ? { boxShadow: '0 1px 3px rgba(0,0,0,0.06)' } : {}}
@@ -227,7 +227,7 @@ export default function ChatPage() {
       </div>
 
       {/* Input */}
-      <div className="flex-shrink-0 px-4 py-3 bg-white border-t border-gray-200"
+      <div className="flex-shrink-0 px-6 py-4 bg-white border-t border-gray-200"
         style={{ boxShadow: '0 -1px 3px rgba(0,0,0,0.04)' }}>
         {isLocked ? (
           <div className="text-center py-2">
@@ -245,7 +245,7 @@ export default function ChatPage() {
                 onChange={e => setInput(e.target.value)}
                 placeholder="Ask a question or share your attempt..."
                 disabled={loading}
-                className="flex-1 px-4 py-2.5 text-sm text-gray-900 bg-gray-50 rounded-xl transition-all focus:outline-none disabled:opacity-50 placeholder-gray-400"
+                className="flex-1 px-4 py-3 text-base text-gray-900 bg-gray-50 rounded-xl transition-all focus:outline-none disabled:opacity-50 placeholder-gray-400"
                 style={{ border: '1.5px solid #E2E8F0' }}
                 onFocus={e => { e.target.style.borderColor = '#14B8A6'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(20,184,166,0.1)' }}
                 onBlur={e => { e.target.style.borderColor = '#E2E8F0'; e.target.style.background = '#F8FAFC'; e.target.style.boxShadow = 'none' }}

@@ -179,16 +179,16 @@ export default function QuizPage() {
   const diff = DIFF[question.difficulty]
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="p-8 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          {subject?.icon && <span className="text-2xl">{subject.icon}</span>}
+          {subject?.icon && <span className="text-3xl">{subject.icon}</span>}
           <div>
-            <h1 className="text-xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900">
               {subject?.name || 'Quiz'} Challenge
             </h1>
-            <p className="text-xs text-gray-400 mt-0.5">Test your knowledge and earn Brain Fuel</p>
+            <p className="text-sm text-gray-400 mt-0.5">Test your knowledge and earn Brain Fuel</p>
           </div>
         </div>
         {fuel !== null && (
@@ -206,7 +206,7 @@ export default function QuizPage() {
       )}
 
       {/* Question card */}
-      <div className="card p-6 mb-4">
+      <div className="card p-7 mb-5">
         <div className="flex items-center gap-2.5 mb-4 flex-wrap">
           {question.topic && (
             <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
@@ -220,11 +220,11 @@ export default function QuizPage() {
             </span>
           )}
         </div>
-        <p className="text-base text-gray-900 leading-relaxed font-medium">{question.question}</p>
+        <p className="text-lg text-gray-900 leading-relaxed font-medium">{question.question}</p>
       </div>
 
       {/* Choices */}
-      <div className="space-y-2.5 mb-5">
+      <div className="space-y-3 mb-6">
         {question.choices?.map((choice, i) => {
           let style = {
             background: 'white', border: '1.5px solid #E2E8F0',
@@ -245,7 +245,7 @@ export default function QuizPage() {
           return (
             <button key={i} onClick={() => handleAnswer(choice)}
               disabled={!!selected || submitting}
-              className="w-full text-left px-4 py-3.5 rounded-2xl text-sm font-medium disabled:cursor-default"
+              className="w-full text-left px-5 py-4 rounded-2xl text-base font-medium disabled:cursor-default"
               style={style}
               onMouseOver={e => {
                 if (!selected) {
@@ -262,7 +262,7 @@ export default function QuizPage() {
                 }
               }}
             >
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold mr-3"
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold mr-3"
                 style={{
                   background: selected && choice === selected
                     ? (result?.correct ? '#34D399' : '#FDA4AF') : '#F1F5F9',

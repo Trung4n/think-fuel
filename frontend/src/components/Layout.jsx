@@ -274,7 +274,7 @@ export default function Layout({ children }) {
   return (
     <div className="flex flex-col h-screen" style={{ backgroundColor: '#F8FAFC' }}>
       {/* Top nav */}
-      <header className="flex-shrink-0 h-16 bg-white border-b border-gray-200 flex items-center px-6 gap-4 z-20"
+      <header className="flex-shrink-0 h-16 bg-white border-b border-gray-200 flex items-center px-10 gap-6 z-20"
         style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
 
         {/* Logo */}
@@ -282,8 +282,8 @@ export default function Layout({ children }) {
           className="flex items-center gap-2 cursor-pointer mr-2 flex-shrink-0"
           onClick={() => navigate(user?.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard')}
         >
-          <Icon icon={faBrain} style={{ color: '#14B8A6', fontSize: '1.25rem' }} />
-          <span className="text-base font-bold" style={{ color: '#14B8A6' }}>ThinkFuel</span>
+          <Icon icon={faBrain} style={{ color: '#14B8A6', fontSize: '1.375rem' }} />
+          <span className="text-lg font-bold" style={{ color: '#14B8A6' }}>ThinkFuel</span>
         </div>
 
         {/* Nav links */}

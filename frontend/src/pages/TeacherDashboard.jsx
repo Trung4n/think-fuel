@@ -66,36 +66,36 @@ export default function TeacherDashboard() {
   const unreadCount = alerts.filter(a => !a.isRead).length
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Teacher Analytics</h1>
+    <div className="p-8 max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Teacher Analytics</h1>
         {dash?.className && (
-          <p className="text-sm text-gray-500 mt-1">{dash.className} — Progress & Early Alerts</p>
+          <p className="text-base text-gray-500 mt-1.5">{dash.className} — Progress & Early Alerts</p>
         )}
       </div>
 
       {/* Summary cards */}
       {dash && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
             { label: 'Total Students', value: dash.totalStudents, color: '#3B82F6' },
             { label: 'Avg Dependency', value: dash.avgDependencyScore, color: '#E11D48' },
             { label: 'At-Risk Students', value: dash.atRiskStudents, color: '#F59E0B' },
             { label: 'Class', value: dash.className || '—', color: '#14B8A6' },
           ].map(({ label, value, color }) => (
-            <div key={label} className="card p-4">
-              <div className="text-2xl font-bold mb-1" style={{ color }}>{value ?? '—'}</div>
-              <div className="text-xs font-medium text-gray-500">{label}</div>
+            <div key={label} className="card p-5">
+              <div className="text-3xl font-bold mb-1.5" style={{ color }}>{value ?? '—'}</div>
+              <div className="text-sm font-medium text-gray-500">{label}</div>
             </div>
           ))}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Students table */}
         <div className="lg:col-span-2 card overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-gray-100">
-            <h2 className="text-sm font-semibold text-gray-900">Students</h2>
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="text-base font-semibold text-gray-900">Students</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -103,7 +103,7 @@ export default function TeacherDashboard() {
                 <tr className="border-b border-gray-100 bg-gray-50">
                   {['Name', 'Brain Fuel', 'Dep.', 'Ind.', 'Risk'].map((h, i) => (
                     <th key={h}
-                      className={`${i > 1 ? 'text-center' : 'text-left'} px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide`}>
+                      className={`${i > 1 ? 'text-center' : 'text-left'} px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide`}>
                       {h}
                     </th>
                   ))}
@@ -119,13 +119,13 @@ export default function TeacherDashboard() {
                 )}
                 {students.map(s => (
                   <tr key={s.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-gray-800">{s.name}</td>
-                    <td className="px-4 py-3 w-36">
+                    <td className="px-5 py-3.5 font-medium text-gray-800">{s.name}</td>
+                    <td className="px-5 py-3.5 w-44">
                       <FuelBar fuel={s.brainFuel} maxFuel={1000} showLabel={false} />
                     </td>
-                    <td className="px-4 py-3 text-center"><ScoreCell score={s.dependencyScore} invert={true} /></td>
-                    <td className="px-4 py-3 text-center"><ScoreCell score={s.independenceScore} /></td>
-                    <td className="px-4 py-3 text-center"><RiskBadge risk={s.risk} /></td>
+                    <td className="px-5 py-3.5 text-center"><ScoreCell score={s.dependencyScore} invert={true} /></td>
+                    <td className="px-5 py-3.5 text-center"><ScoreCell score={s.independenceScore} /></td>
+                    <td className="px-5 py-3.5 text-center"><RiskBadge risk={s.risk} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -135,8 +135,8 @@ export default function TeacherDashboard() {
 
         {/* Alerts */}
         <div className="card overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-            <h2 className="text-sm font-semibold text-gray-900">Alerts</h2>
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <h2 className="text-base font-semibold text-gray-900">Alerts</h2>
             {unreadCount > 0 && (
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
                 style={{ background: '#FFF1F2', color: '#E11D48', border: '1px solid #FECDD3' }}>

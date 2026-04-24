@@ -22,9 +22,9 @@ const RECOMMENDATION_TEXT = {
 
 function MetricPill({ label, value, color }) {
   return (
-    <div className="flex flex-col items-center px-3 py-2 rounded-xl"
+    <div className="flex flex-col items-center px-4 py-2.5 rounded-xl"
       style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-      <span className="text-base font-bold" style={{ color }}>{value}</span>
+      <span className="text-lg font-bold" style={{ color }}>{value}</span>
       <span className="text-xs text-gray-400 mt-0.5 whitespace-nowrap">{label}</span>
     </div>
   )
@@ -56,10 +56,10 @@ function StepCard({ step, index }) {
             Target: {step.targetAccuracy}% accuracy
           </span>
         </div>
-        <h4 className="text-sm font-semibold text-gray-900 mb-2">{step.title}</h4>
-        <ul className="space-y-1.5">
+        <h4 className="text-base font-semibold text-gray-900 mb-2.5">{step.title}</h4>
+        <ul className="space-y-2">
           {step.actions.map((action, i) => (
-            <li key={i} className="flex items-start gap-2 text-xs text-gray-600 leading-relaxed">
+            <li key={i} className="flex items-start gap-2 text-sm text-gray-600 leading-relaxed">
               <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold"
                 style={{ background: accentColor, fontSize: '9px' }}>
                 {i + 1}
@@ -82,11 +82,11 @@ function SubjectCard({ subject }) {
   return (
     <div className="card overflow-hidden">
       {/* Subject header */}
-      <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+      <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{subject.icon}</span>
+          <span className="text-3xl">{subject.icon}</span>
           <div>
-            <h3 className="text-base font-bold text-gray-900">{subject.subjectName}</h3>
+            <h3 className="text-lg font-bold text-gray-900">{subject.subjectName}</h3>
             <span className="text-xs font-medium px-2 py-0.5 rounded-full"
               style={{ color: lvl.color, background: lvl.bg, border: `1px solid ${lvl.border}` }}>
               {lvl.label}
@@ -165,11 +165,11 @@ export default function RoadmapPage() {
   const recText = RECOMMENDATION_TEXT[profile.recommendation] ?? ''
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-5">
+    <div className="p-8 max-w-6xl mx-auto space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Learning Roadmap</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <h1 className="text-3xl font-bold text-gray-900">Learning Roadmap</h1>
+        <p className="text-base text-gray-500 mt-1.5">
           Personalized 3-week plan based on your quiz performance and AI usage — updated each visit.
         </p>
       </div>
@@ -201,7 +201,7 @@ export default function RoadmapPage() {
             <p className="text-xs font-semibold text-teal-600 mb-1 uppercase tracking-wide">
               AI Coach Assessment
             </p>
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{explanation}</p>
+            <p className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap">{explanation}</p>
           </div>
         </div>
       </div>
