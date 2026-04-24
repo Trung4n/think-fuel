@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import FuelBar from '../components/FuelBar'
 import Icon from '../components/Icon'
-import { faInbox, faCircleCheck, faLightbulb, faRobot, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faInbox, faCircleCheck, faLightbulb, faRobot, faArrowRight, faUsers } from '@fortawesome/free-solid-svg-icons'
+import PeerChatModal from '../components/PeerChatModal'
 
 const DIFF = {
   easy:   { label: 'Easy',   color: '#059669', bg: '#ECFDF5', border: '#A7F3D0' },
@@ -27,6 +28,10 @@ export default function QuizPage() {
   const [submitting, setSubmitting] = useState(false)
   const [askingAI, setAskingAI] = useState(false)
   const [askSent, setAskSent] = useState(false)
+  const [showPeerButton, setShowPeerButton] = useState(false)
+  const [peerModal, setPeerModal] = useState(null)
+  const [loadingPeers, setLoadingPeers] = useState(false)
+  const [noPeers, setNoPeers] = useState(false)
 
   // Redirect if no subject selected
   useEffect(() => {
@@ -51,6 +56,9 @@ export default function QuizPage() {
     setResult(null)
     setAskingAI(false)
     setAskSent(false)
+    setShowPeerButton(false)
+    setPeerModal(null)
+    setNoPeers(false)
     try {
       const [qRes, dRes] = await Promise.all([
         api.get(`/quiz/next/${user.id}/${subjectId}`),
@@ -68,6 +76,13 @@ export default function QuizPage() {
 
   useEffect(() => { loadQuestion() }, [subjectId, user.id])
 
+  // Show peer button after 20 s of staring at the same question
+  useEffect(() => {
+    if (!question || showPeerButton) return
+    const t = setTimeout(() => setShowPeerButton(true), 20000)
+    return () => clearTimeout(t)
+  }, [question, showPeerButton])
+
   async function handleAnswer(choice) {
     if (selected || submitting) return
     setSelected(choice)
@@ -81,6 +96,7 @@ export default function QuizPage() {
       const d = res.data.data
       setResult(d)
       if (d.newFuel !== undefined) setFuel(d.newFuel)
+      if (!d.correct) setShowPeerButton(true)
     } catch (e) {
       console.error(e)
     } finally {
@@ -115,6 +131,26 @@ export default function QuizPage() {
     } catch (e) {
       console.error(e)
       setAskingAI(false)
+    }
+  }
+
+  async function handleAskPeer() {
+    if (loadingPeers) return
+    setLoadingPeers(true)
+    setNoPeers(false)
+    try {
+      const res = await api.get(`/students/${user.id}/peers`)
+      const peers = res.data.data || []
+      const match = peers.find(p => p.available) || null
+      if (!match) {
+        setNoPeers(true)
+      } else {
+        setPeerModal(match)
+      }
+    } catch {
+      setNoPeers(true)
+    } finally {
+      setLoadingPeers(false)
     }
   }
 
@@ -272,6 +308,32 @@ export default function QuizPage() {
         </div>
       )}
 
+      {/* Peer mentor button */}
+      {showPeerButton && !result?.correct && (
+        <div className="mb-5">
+          <button
+            onClick={handleAskPeer}
+            disabled={loadingPeers}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-medium transition-all"
+            style={{
+              background: '#F0F9FF',
+              color: '#0369A1',
+              border: '1.5px solid #BAE6FD',
+              opacity: loadingPeers ? 0.7 : 1,
+            }}
+          >
+            <Icon icon={faUsers} style={{ fontSize: '0.875rem' }} />
+            {loadingPeers ? 'Finding a peer...' : 'Ask a Peer Mentor'}
+            {!loadingPeers && <Icon icon={faArrowRight} size="xs" className="ml-auto opacity-50" />}
+          </button>
+          {noPeers && (
+            <p className="text-xs text-center mt-1.5" style={{ color: '#94A3B8' }}>
+              No peers available right now — try again later.
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Result feedback */}
       {result && (
         <div className="rounded-2xl p-4 mb-5"
@@ -307,6 +369,8 @@ export default function QuizPage() {
           Next Question →
         </button>
       )}
+
+      {peerModal && <PeerChatModal peer={peerModal} onClose={() => setPeerModal(null)} />}
     </div>
   )
 }

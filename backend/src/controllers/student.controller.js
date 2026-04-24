@@ -25,3 +25,22 @@ export const getProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select("-passwordHash");
   res.json({ success: true, data: user });
 });
+
+export const getPeers = asyncHandler(async (req, res) => {
+  const me = await User.findById(req.params.id).select("classId").lean();
+  if (!me?.classId) return res.json({ success: true, data: [] });
+
+  const peers = await User.find({
+    classId: me.classId,
+    role: "student",
+    status: "active",
+    _id: { $ne: req.params.id },
+  })
+    .select("_id fullName")
+    .lean();
+
+  res.json({
+    success: true,
+    data: peers.map((p) => ({ userId: p._id.toString(), name: p.fullName, available: true })),
+  });
+});
